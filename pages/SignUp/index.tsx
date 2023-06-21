@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Success, Form, Error, Label, Input, LinkContainer, Button, Header } from './styles';
-import useInput from '@hooks/useinput';
+import useInput from '@hooks/useInput';
 
 const SignUp = () => {
   const [email, onChangeEmail] = useInput('');
