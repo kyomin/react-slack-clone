@@ -1,4 +1,4 @@
-import useInput from '@hooks/useInput'
+import useInput from '@hooks/useInput';
 import { Success, Form, Error, Label, Input, LinkContainer, Button, Header } from '@pages/SignUp/styles';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
@@ -7,8 +7,8 @@ import { Link, Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error } = useSWR('/api/users', fetcher);
-  
+  const { data, error, revalidate } = useSWR('/api/users', fetcher);
+
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -25,7 +25,11 @@ const LogIn = () => {
           },
         )
         .then((response) => {
-          // revalidate();
+          /* 
+            revalidate 하는 순간 /api/users로의 GET 요청을 다시 실행하고,
+            그래서 data 등등의 값이 바뀌는 순간 해당 페이지는 다시 렌더링 되어 처음부터 실행된다.
+          */
+          revalidate();
         })
         .catch((error) => {
           setLogInError(error.response?.status === 401);
@@ -34,13 +38,13 @@ const LogIn = () => {
     [email, password],
   );
 
-  // if (data === undefined) {
-  //   return <div>로딩중...</div>;
-  // }
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
 
-  // if (data) {
-  //   return <Redirect to="/workspace/sleact/channel/일반" />;
-  // }
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
 
   // console.log(error, userData);
   // if (!error && userData) {
