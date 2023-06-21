@@ -81,6 +81,15 @@ const config: Configuration = {
     port: 3090,
     devMiddleware: { publicPath: '/dist/' },
     static: { directory: path.resolve(__dirname) },
+    proxy: {
+      // /api/로 시작하는 요청은
+      '/api/': {
+        // 프론트가 아닌, 백엔드 서버 자신이 보낸 것처럼 속인다.
+        // => CORS 해결 및 OPTIONS 요청도 생략한다.
+        target: 'http://localhost:3095',
+        changeOrigin: true,
+      },
+    },
   },
 };
 

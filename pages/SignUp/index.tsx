@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
 import { Success, Form, Error, Label, Input, LinkContainer, Button, Header } from './styles';
 import useInput from '@hooks/useinput';
 
@@ -9,8 +10,8 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [mismatchError, setMismatchError] = useState(false);
-  const [signUpError] = useState('');
-  const [signUpSuccess] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const onChangePassword = useCallback(
     (e) => {
@@ -36,8 +37,32 @@ const SignUp = () => {
     (e) => {
       e.preventDefault();
 
-      if (!mismatchError) {
+      if (!mismatchError && nickname) {
         console.log('서버로 회원가입하기');
+
+        /*
+          [ TIP ]
+          비동기 요청 결과에 따라 달라지는 데이터들은
+          비동기 요청 전에 초기화 해주는 것이 좋다.
+        */
+        setSignUpError('');
+        setSignUpSuccess(false);
+
+        axios
+          .post('/api/users', {
+            email,
+            nickname,
+            password,
+          })
+          .then((res) => {
+            console.log('response: ', res);
+            setSignUpSuccess(true);
+          })
+          .catch((err) => {
+            console.error('error: ', err.response);
+            setSignUpError(err.response.data);
+          })
+          .finally(() => {});
       }
     },
     [email, nickname, password, passwordCheck, mismatchError],
