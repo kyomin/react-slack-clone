@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -15,8 +15,13 @@ import {
   Workspaces,
 } from './styles';
 import gravatar from 'gravatar';
+import loadable from '@loadable/component';
 
-const Workspace: FC = ({ children }) => {
+// Pages
+const Channel = loadable(() => import('@pages/Channel'));
+const DirectMessage = loadable(() => import('@pages/DirectMessage'));
+
+const Workspace: FC = () => {
   const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher, {
     dedupingInterval: 2000, // 캐시의 유지 시간.
   });
@@ -52,11 +57,13 @@ const Workspace: FC = ({ children }) => {
           <WorkspaceName>Sleact</WorkspaceName>
           <MenuScroll>Menu Scroll</MenuScroll>
         </Channels>
-        <Chats>Chats</Chats>
+        <Chats>
+          <Switch>
+            <Route path="/workspace/channel" component={Channel} />
+            <Route path="/workspace/dm" component={DirectMessage} />
+          </Switch>
+        </Chats>
       </WorkspaceWrapper>
-
-      {/* 해당 태그(Workspace)로 감싼 내부가 이 곳에 삽입된다. */}
-      {children}
     </div>
   );
 };
