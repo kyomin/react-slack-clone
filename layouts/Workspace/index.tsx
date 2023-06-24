@@ -44,6 +44,7 @@ import CreateChannelModal from '@components/CreateChannelModal';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
+import ChannelList from '@components/ChannelList';
 
 // Pages
 const Channel = loadable(() => import('@pages/Channel'));
@@ -205,6 +206,7 @@ const Workspace: VFC = () => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
+            <ChannelList />
             <DMList />
           </MenuScroll>
         </Channels>
