@@ -77,15 +77,15 @@ const ChatBox: VFC<Props> = ({ chat, onChangeChat, onSubmitForm, placeholder }) 
           onChange={onChangeChat}
           onKeyPress={onKeydownChat}
           placeholder={placeholder}
-          inputRef={textareaRef}
-          allowSuggestionsAboveCursor
+          ref={textareaRef}
+          // allowSuggestionsAboveCursor
         >
-          <Mention
+          {/* <Mention
             appendSpaceOnAdd
             trigger="@"
             data={memberData?.map((v) => ({ id: v.id, display: v.nickname })) || []}
             renderSuggestion={renderSuggestion}
-          />
+          /> */}
         </MentionsTextarea>
         <Toolbox>
           <SendButton
