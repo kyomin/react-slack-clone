@@ -1,5 +1,5 @@
 // React
-import React, { VFC, useCallback, useState } from 'react';
+import React, { VFC, useCallback, useEffect, useState } from 'react';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { useParams } from 'react-router';
 
@@ -46,6 +46,7 @@ import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
 import ChannelList from '@components/ChannelList';
+import useSocket from '@hooks/useSocket';
 
 // Pages
 const Channel = loadable(() => import('@pages/Channel'));
@@ -78,6 +79,26 @@ const Workspace: VFC = () => {
 
   // 멤버 정보
   const { data: memberData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+
+  // 소켓
+  const [socket, disconnet] = useSocket(workspace);
+
+  useEffect(() => {
+    if (channelData && userData && socket) {
+      // 클라이언트 -> 서버로의 통신(emit)
+      socket.emit('login', {
+        id: userData.id,
+        channels: channelData.map((v) => v.id),
+      });
+    }
+  }, [socket, channelData, userData]);
+
+  useEffect(() => {
+    // workspace가 바뀌는 시점에서 소켓 연결을 끊어준다.
+    return () => {
+      disconnet();
+    };
+  }, [workspace, disconnet]);
 
   const onLogout = useCallback(() => {
     axios
@@ -187,7 +208,7 @@ const Workspace: VFC = () => {
       </Header>
       <WorkspaceWrapper>
         <Workspaces>
-          {userData?.Workspaces.map((ws) => {
+          {userData?.Workspaces?.map((ws) => {
             return (
               <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
