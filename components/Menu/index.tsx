@@ -4,13 +4,13 @@ import { CloseModalButton, CreateMenu } from './styles';
 interface Props {
   style: CSSProperties;
   show: boolean;
-  onCloseModal: () => void;
+  onCloseModal: (e: any) => void;
   closeButton?: boolean;
 }
 
 const Menu: FC<Props> = ({ children, style, show, onCloseModal, closeButton }) => {
   const stopPropagation = useCallback((e) => {
-    e.stopPropagation;
+    e.stopPropagation();
   }, []);
 
   return (
