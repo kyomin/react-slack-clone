@@ -29,7 +29,7 @@ const LogIn = () => {
             revalidate 하는 순간 /api/users로의 GET 요청을 다시 실행하고,
             그래서 data 등등의 값이 바뀌는 순간 해당 페이지는 다시 렌더링 되어 처음부터 실행된다.
           */
-          // revalidate();
+          revalidate();
 
           /* 
             revalidate를 하면 다시 GET 요청을 보내는 일이 발생한다.
@@ -39,7 +39,7 @@ const LogIn = () => {
             즉, 서버 요청이 성공할 것이라는 낙관적인 사고로 프론트에 즉각 반영하는 것이다.
             => OPTIMISTIC UI
           */
-          mutate(response.data, false);
+          // mutate(response.data, false);
         })
         .catch((error) => {
           setLogInError(error.response?.status === 401);
