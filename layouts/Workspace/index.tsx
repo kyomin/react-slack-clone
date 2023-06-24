@@ -1,6 +1,7 @@
 // React
 import React, { VFC, useCallback, useState } from 'react';
-import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
+import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { useParams } from 'react-router';
 
 // Libs
 import axios from 'axios';
